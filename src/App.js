@@ -8,12 +8,9 @@ function App() {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(question);
-
     axios.post('https://chatapp-ai-wegj.vercel.app/getResponse', {
       question: question
     }).then(res => {
-      console.log(res.data.response);
       setResponse(res.data.response);
     }).catch(err => {
       console.log(err, "error hai frontend");
@@ -21,14 +18,16 @@ function App() {
   };
 
   const speakHandler = () => {
-    const a = new SpeechSynthesisUtterance(response);
-    window.speechSynthesis.speak(a);
+    const utterance = new SpeechSynthesisUtterance(response);
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const stopHandler = () => {
+    window.speechSynthesis.cancel();
   };
 
   return (
     <div className="App">
-      
-     
       <div className="box">
         <div className='profile-pic'>
           <img src={require('../src/assets/boy.webp')} alt="profile-pic" className='pic' />
@@ -44,7 +43,10 @@ function App() {
         </div>
         <p className='lebel'>Answer</p>
         <textarea value={response} readOnly />
-        <button onClick={speakHandler}>Speak</button>
+        <div style={{ display: 'flex', gap: '10px', width: '80%', justifyContent: 'center' }}>
+          <button onClick={speakHandler}>Speak</button>
+          <button onClick={stopHandler}>Stop</button>
+        </div>
       </div>
     </div>
   );
